@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: kitchen_log_api
+  profiles:
+    active: dev
