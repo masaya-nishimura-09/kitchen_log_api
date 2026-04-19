@@ -1,17 +1,17 @@
-package com.example.kitchen_log_api.infrastructure.recipe
+package com.example.kitchen_log_api.infrastructure.recipe.entity
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
-@Table("steps")
-data class RecipeStepEntity (
+@Table("recipes")
+data class RecipeEntity (
     @Id
     val id: Long? = null,
-    val recipeId: Long,
     val userId: Long,
-    val text: String,
-    val order: Long,
+    val title: String,
+    val imageUrl: String?,
+    val memo: String?,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
 )
