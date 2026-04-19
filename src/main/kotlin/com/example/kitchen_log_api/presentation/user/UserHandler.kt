@@ -9,8 +9,7 @@ import org.springframework.web.reactive.function.server.bodyValueAndAwait
 @Component
 class UserHandler {
     suspend fun fetchAllUsers(request: ServerRequest): ServerResponse {
-        val userDtos = {
-        }
+        val userDtos = {}
         return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(userDtos)
     }
 }
