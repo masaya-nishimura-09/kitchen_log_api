@@ -1,17 +1,15 @@
-package com.example.kitchen_log_api.domain.recipe
+package com.example.kitchen_log_api.domain.setmeal
 
+import com.example.kitchen_log_api.domain.recipe.Recipe
 import com.example.kitchen_log_api.domain.user.User
 import java.time.LocalDateTime
 
-data class Recipe(
+data class SetMeal(
     val id: Id,
     val userId: User.Id,
     val title: Title,
-    val imageUrl: ImageUrl? = null,
     val memo: Memo? = null,
-    val tags: List<RecipeTag>,
-    val ingredients: List<RecipeIngredient>,
-    val steps: List<RecipeStep>,
+    val recipeIds: List<Recipe.Id>,
     val createdAt: CreatedAt,
     val updatedAt: UpdatedAt
 ) {
@@ -20,9 +18,6 @@ data class Recipe(
 
     @JvmInline
     value class Title(val value: String)
-
-    @JvmInline
-    value class ImageUrl(val value: String)
 
     @JvmInline
     value class Memo(val value: String)
