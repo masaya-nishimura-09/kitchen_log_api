@@ -1,12 +1,14 @@
-package com.example.kitchen_log_api.domain.user
+package com.example.kitchen_log_api.domain.recipe
 
+import com.example.kitchen_log_api.domain.user.User
 import java.time.LocalDateTime
 
-data class User(
+data class RecipeStep(
     val id: Id,
-    val username: Username,
-    val email: Email,
-    val password: Password,
+    val recipeId: Recipe.Id,
+    val userId: User.Id,
+    val text: Text,
+    val order: Order,
     val createdAt: CreatedAt,
     val updatedAt: UpdatedAt
 ) {
@@ -14,13 +16,10 @@ data class User(
     value class Id(val value: Long)
 
     @JvmInline
-    value class Username(val value: String)
+    value class Text(val value: String)
 
     @JvmInline
-    value class Email(val value: String)
-
-    @JvmInline
-    value class Password(val value: String)
+    value class Order(val value: Int)
 
     @JvmInline
     value class CreatedAt(val value: LocalDateTime)
