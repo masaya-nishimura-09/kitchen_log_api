@@ -1,16 +1,15 @@
-package com.example.kitchen_log_api.domain.recipe
+package com.example.kitchen_log_api.domain.shoppinglist
 
 import com.example.kitchen_log_api.domain.user.User
 import java.time.LocalDateTime
 
-data class RecipeIngredient(
+data class ShoppingListItem(
     val id: Id,
-    val recipeId: Recipe.Id,
     val userId: User.Id,
     val name: Name,
     val amount: Amount? = null,
     val measurementUnit: MeasurementUnit,
-    val order: Order,
+    val status: Status,
     val createdAt: CreatedAt,
     val updatedAt: UpdatedAt
 ) {
@@ -27,7 +26,7 @@ data class RecipeIngredient(
     value class MeasurementUnit(val value: String)
 
     @JvmInline
-    value class Order(val value: Int)
+    value class Status(val value: Boolean)
 
     @JvmInline
     value class CreatedAt(val value: LocalDateTime)
