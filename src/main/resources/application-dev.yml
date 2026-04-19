@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: kitchen_log_api
   r2dbc:
     url: r2dbc:postgresql://localhost:5432/kitchen_log
     username: postgres
