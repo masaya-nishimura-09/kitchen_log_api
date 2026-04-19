@@ -40,3 +40,5 @@ out/
 .kotlin
 
 application-dev.yml
+
+.env
