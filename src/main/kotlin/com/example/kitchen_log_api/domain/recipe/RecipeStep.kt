@@ -19,7 +19,7 @@ data class RecipeStep(
     value class Text(val value: String)
 
     @JvmInline
-    value class Order(val value: Int)
+    value class Order(val value: Long)
 
     @JvmInline
     value class CreatedAt(val value: LocalDateTime)

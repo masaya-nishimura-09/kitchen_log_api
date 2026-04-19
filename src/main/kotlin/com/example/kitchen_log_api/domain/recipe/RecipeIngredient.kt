@@ -8,7 +8,7 @@ data class RecipeIngredient(
     val recipeId: Recipe.Id,
     val userId: User.Id,
     val name: Name,
-    val amount: Amount? = null,
+    val amount: Amount?,
     val measurementUnit: MeasurementUnit,
     val order: Order,
     val createdAt: CreatedAt,
@@ -27,7 +27,7 @@ data class RecipeIngredient(
     value class MeasurementUnit(val value: String)
 
     @JvmInline
-    value class Order(val value: Int)
+    value class Order(val value: Long)
 
     @JvmInline
     value class CreatedAt(val value: LocalDateTime)
