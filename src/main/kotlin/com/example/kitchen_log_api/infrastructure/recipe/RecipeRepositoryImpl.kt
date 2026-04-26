@@ -16,7 +16,9 @@ import com.example.kitchen_log_api.infrastructure.recipe.repository.RecipeStepCr
 import com.example.kitchen_log_api.infrastructure.recipe.repository.RecipeTagCrudRepository
 import kotlinx.coroutines.flow.toList
 import org.springframework.dao.DataAccessException
+import org.springframework.stereotype.Repository
 
+@Repository
 class RecipeRepositoryImpl(
     private val recipeCrudRepository: RecipeCrudRepository,
     private val recipeTagCrudRepository: RecipeTagCrudRepository,
@@ -73,7 +75,7 @@ class RecipeRepositoryImpl(
             updatedAt = Recipe.UpdatedAt(recipeEntity.updatedAt)
         )
 
-    override suspend fun fetchRecipes(userId: User.Id): List<Recipe> {
+    override suspend fun fetchAllRecipes(userId: User.Id): List<Recipe> {
         try {
             val recipeEntities = recipeCrudRepository.findAllByUserId(userId.value).toList()
             return recipeEntities.map { recipeEntity ->

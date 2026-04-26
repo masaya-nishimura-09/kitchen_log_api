@@ -8,6 +8,6 @@ import org.springframework.web.reactive.function.server.coRouter
 class UserRouterConfiguration {
     @Bean
     fun userRouter(userHandler: UserHandler) = coRouter {
-        GET("users", userHandler::fetchAllUsers )
+        GET("/users", userHandler::fetchAllUsers )
     }
 }

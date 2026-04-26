@@ -9,5 +9,5 @@ import org.springframework.stereotype.Service
 class RecipeUseCase(
     private val recipeRepository: RecipeRepository,
 ) {
-    suspend fun fetchRecipes(userId: User.Id): List<Recipe> = recipeRepository.fetchRecipes(userId)
+    suspend fun fetchAllRecipes(userId: User.Id): List<Recipe> = recipeRepository.fetchAllRecipes(userId)
 }

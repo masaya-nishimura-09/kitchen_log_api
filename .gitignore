@@ -42,4 +42,4 @@ out/
 application-dev.yml
 
 .env
-openjdk.jdk/
+openjdk.jdk
