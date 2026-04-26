@@ -9,5 +9,6 @@ class RecipeRouterConfiguration {
     @Bean
     fun recipeRouter(recipeHandler: RecipeHandler) = coRouter {
         GET("/recipes", recipeHandler::fetchAllRecipes )
+        GET("/recipes/{id}", recipeHandler::fetchRecipeById )
     }
 }

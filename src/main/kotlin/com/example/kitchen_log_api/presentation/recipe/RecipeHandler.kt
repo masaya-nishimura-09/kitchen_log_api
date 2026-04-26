@@ -2,6 +2,7 @@ package com.example.kitchen_log_api.presentation.recipe
 
 import com.example.kitchen_log_api.application.recipe.RecipeUseCase
 import com.example.kitchen_log_api.domain.exception.FetchFailedException
+import com.example.kitchen_log_api.domain.exception.NotFoundException
 import com.example.kitchen_log_api.domain.recipe.Recipe
 import com.example.kitchen_log_api.domain.user.User
 import org.springframework.http.HttpStatus
@@ -55,7 +56,7 @@ class RecipeHandler(
         val userId = 0
 
         return try {
-            val recipeResponses =
+            val recipeResponse =
                 recipeUseCase
                     .fetchAllRecipes(User.Id(userId.toLong()))
                     .map { recipe -> toRecipeResponse(recipe) }
@@ -63,13 +64,53 @@ class RecipeHandler(
             ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValueAndAwait(recipeResponses)
+                .bodyValueAndAwait(recipeResponse)
         } catch (ex: Exception) {
             when (ex) {
                 is FetchFailedException -> {
                     throw ResponseStatusException(
                         HttpStatus.INTERNAL_SERVER_ERROR,
                         ex.message ?: "レシピの取得に失敗しました"
+                    )
+                }
+
+                else -> {
+                    throw ResponseStatusException(
+                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        "予期せぬエラーが発生しました"
+                    )
+                }
+            }
+        }
+    }
+
+    suspend fun fetchRecipeById(request: ServerRequest): ServerResponse {
+        val id: Long = request.pathVariable("id").toLong()
+
+        return try {
+            val recipeResponse =
+                toRecipeResponse(
+                    recipeUseCase
+                        .fetchRecipeById(Recipe.Id(id))
+                )
+
+            ServerResponse
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValueAndAwait(recipeResponse)
+        } catch (ex: Exception) {
+            when (ex) {
+                is FetchFailedException -> {
+                    throw ResponseStatusException(
+                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        ex.message ?: "レシピの取得に失敗しました"
+                    )
+                }
+
+                is NotFoundException -> {
+                    throw ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        ex.message ?: "レシピが見つかりませんでした: $id"
                     )
                 }
 

@@ -1,6 +1,7 @@
 package com.example.kitchen_log_api.infrastructure.recipe
 
 import com.example.kitchen_log_api.domain.exception.FetchFailedException
+import com.example.kitchen_log_api.domain.exception.NotFoundException
 import com.example.kitchen_log_api.domain.recipe.Recipe
 import com.example.kitchen_log_api.domain.recipe.RecipeIngredient
 import com.example.kitchen_log_api.domain.recipe.RecipeRepository
@@ -96,7 +97,24 @@ class RecipeRepositoryImpl(
     }
 
     override suspend fun fetchRecipeById(id: Recipe.Id): Recipe {
-        TODO("Not yet implemented")
+        try {
+            val recipeEntity = recipeCrudRepository.findById(id.value)
+                ?: throw NotFoundException("レシピが見つかりませんでした: ${id.value}")
+
+            val recipeId = recipeEntity.id!!
+            val tags = recipeTagCrudRepository
+                .findAllByRecipeId(recipeId).toList()
+            val ingredients = recipeIngredientCrudRepository
+                .findAllByRecipeId(recipeId).toList()
+            val steps = recipeStepCrudRepository
+                .findAllByRecipeId(recipeId).toList()
+
+            return toRecipe(recipeEntity, tags, ingredients, steps)
+        } catch (ex: NotFoundException) {
+            throw ex
+        } catch (ex: DataAccessException) {
+            throw FetchFailedException("レシピの取得に失敗しました: ${id.value}")
+        }
     }
 
     override suspend fun createRecipe(recipe: Recipe): Recipe {

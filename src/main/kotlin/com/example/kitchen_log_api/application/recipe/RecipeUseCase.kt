@@ -10,4 +10,5 @@ class RecipeUseCase(
     private val recipeRepository: RecipeRepository,
 ) {
     suspend fun fetchAllRecipes(userId: User.Id): List<Recipe> = recipeRepository.fetchAllRecipes(userId)
+    suspend fun fetchRecipeById(id: Recipe.Id): Recipe = recipeRepository.fetchRecipeById(id)
 }
