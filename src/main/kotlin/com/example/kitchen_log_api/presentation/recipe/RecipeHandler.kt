@@ -1,13 +1,16 @@
 package com.example.kitchen_log_api.presentation.recipe
 
 import com.example.kitchen_log_api.application.recipe.RecipeUseCase
+import com.example.kitchen_log_api.domain.exception.FetchFailedException
 import com.example.kitchen_log_api.domain.recipe.Recipe
 import com.example.kitchen_log_api.domain.user.User
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.bodyValueAndAwait
+import org.springframework.web.server.ResponseStatusException
 import java.time.format.DateTimeFormatter
 
 @Component
@@ -20,22 +23,28 @@ class RecipeHandler(
             title = recipe.title.value,
             imageUrl = recipe.imageUrl?.value,
             memo = recipe.memo?.value,
-            tags = recipe.tags.map { RecipeResponse.TagResponse(
-                id = it.id.value,
-                name = it.name.value
-            ) },
-            ingredients = recipe.ingredients.map { RecipeResponse.IngredientResponse(
-                id = it.id.value,
-                name = it.name.value,
-                amount = it.amount?.value,
-                measurementUnit = it.measurementUnit.value,
-                order = it.order.value
-            ) },
-            steps = recipe.steps.map { RecipeResponse.StepResponse(
-                id = it.id.value,
-                text = it.text.value,
-                order = it.order.value
-            ) },
+            tags = recipe.tags.map {
+                RecipeResponse.TagResponse(
+                    id = it.id.value,
+                    name = it.name.value
+                )
+            },
+            ingredients = recipe.ingredients.map {
+                RecipeResponse.IngredientResponse(
+                    id = it.id.value,
+                    name = it.name.value,
+                    amount = it.amount?.value,
+                    measurementUnit = it.measurementUnit.value,
+                    order = it.order.value
+                )
+            },
+            steps = recipe.steps.map {
+                RecipeResponse.StepResponse(
+                    id = it.id.value,
+                    text = it.text.value,
+                    order = it.order.value
+                )
+            },
             createdAt = recipe.createdAt.value.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
             updatedAt = recipe.updatedAt.value.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         )
@@ -56,7 +65,21 @@ class RecipeHandler(
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValueAndAwait(recipeResponses)
         } catch (ex: Exception) {
-            TODO()
+            when (ex) {
+                is FetchFailedException -> {
+                    throw ResponseStatusException(
+                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        ex.message ?: "レシピの取得に失敗しました"
+                    )
+                }
+
+                else -> {
+                    throw ResponseStatusException(
+                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        "予期せぬエラーが発生しました"
+                    )
+                }
+            }
         }
     }
 }
