@@ -1,5 +1,6 @@
 package com.example.kitchen_log_api.infrastructure.recipe
 
+import com.example.kitchen_log_api.domain.exception.FetchFailedException
 import com.example.kitchen_log_api.domain.recipe.Recipe
 import com.example.kitchen_log_api.domain.recipe.RecipeIngredient
 import com.example.kitchen_log_api.domain.recipe.RecipeRepository
@@ -79,18 +80,18 @@ class RecipeRepositoryImpl(
         try {
             val recipeEntities = recipeCrudRepository.findAllByUserId(userId.value).toList()
             return recipeEntities.map { recipeEntity ->
+                val recipeId = recipeEntity.id!!
                 val tags = recipeTagCrudRepository
-                    .findAllByRecipeId(recipeEntity.id!!).toList()
+                    .findAllByRecipeId(recipeId).toList()
                 val ingredients = recipeIngredientCrudRepository
-                    .findAllByRecipeId(recipeEntity.id).toList()
+                    .findAllByRecipeId(recipeId).toList()
                 val steps = recipeStepCrudRepository
-                    .findAllByRecipeId(recipeEntity.id).toList()
+                    .findAllByRecipeId(recipeId).toList()
 
                 toRecipe(recipeEntity, tags, ingredients, steps)
             }
         } catch (ex: DataAccessException) {
-//            throw RecipeFetchFailedException("予期せぬエラーが発生しました")
-            TODO("Not yet implemented")
+            throw FetchFailedException("レシピの取得に失敗しました")
         }
     }
 
